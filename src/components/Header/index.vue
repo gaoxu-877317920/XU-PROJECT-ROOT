@@ -7,8 +7,8 @@
           <p>尚品汇欢迎您！</p>
           <p>
             <span>请</span>
-            <router-link to="/login">登录</router-link>
-            <router-link to="/register" class="register">免费注册</router-link>
+            <a href="###">登录</a>
+            <a href="###" class="register">免费注册</a>
           </p>
         </div>
         <div class="typeList">
@@ -26,21 +26,16 @@
     <!--头部第二行 搜索区域-->
     <div class="bottom">
       <h1 class="logoArea">
-        <router-link to='/' class="logo" title="尚品汇">
-          <img src="./images/logo.png" alt="" />
+        <!-- 声明式导航 -->
+        <router-link to="/">
+          <img src="./images/logo.png" alt />
         </router-link>
       </h1>
       <div class="searchArea">
-        <form action="###" class="searchForm">
-          <input
-            type="text"
-            id="autocomplete"
-            class="input-error input-xxlarge"
-            v-model="keyword"
-          />
-          <button @click.prevent="search" class="sui-btn btn-xlarge btn-danger" type="submit">
-            搜索
-          </button>
+        <form action="/xxx" class="searchForm">
+          <input type="text" id="autocomplete" class="input-error input-xxlarge" 
+            v-model.trim="keyword"/>
+          <button class="sui-btn btn-xlarge btn-danger" @click.prevent="search">搜索</button>
         </form>
       </div>
     </div>
@@ -50,28 +45,47 @@
 <script>
 export default {
   name: "Header",
-  data(){
+
+  data () {
     return {
-      keyword:''
+      keyword: ''
     }
   },
+
   methods: {
-    search(){
+    search () {
+      // 编程式路由导航
       // this.$router.push(`/search/${this.keyword}`)
-      const location={
-        name:'search',
+
+      const location = {
+        name: 'search',
+        query: this.$route.query // 将当前就有的query参数携带上
       }
-      if(this.keyword.trim()){
-        location.query={
-          keyword2:this.keyword
-        },
-        location.params={
-           keyword:this.keyword
+      // 只有数据时, 才携带params参数
+      if (this.keyword) {
+        location.params = { // 路由必须配置name
+          keyword: this.keyword
         }
+        // location.query = {
+        //   keyword2: this.keyword.toUpperCase()
+        // }
       }
-      this.$router.push(location)
+
+      /* 
+      router.push(location, onComplete?, onAbort?)
+      router.push(location).then(onComplete).catch(onAbort)
+      */
+
+     this.$router.push(location)
+
+      // 解决重复跳转路由的错误:
+      // 方法一: 传入成功的回调函数函数
+      // console.log(this.$router.push(location, () => {}))
+      // 方法: catch处理错误的promise
+      // console.log(this.$router.push(location)).catch(() => {})
+
     }
-  },
+  }
 };
 </script>
 
@@ -151,7 +165,6 @@ export default {
             outline: none;
           }
         }
-
         button {
           height: 32px;
           width: 68px;
